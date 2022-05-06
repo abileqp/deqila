@@ -1,18 +1,25 @@
 import java.util.*; 
 
-public class HashTable { 
-  public static void main(String args[]) 
-  {
-  Hashtable<Integer, Integer> 
-    ht = new Hashtable<Integer, Integer>(); 
+public class HashTable{ 
+  public static HashNode<K, V>{
+    private K key;
+    private V value;
+    private HashNode<K, V> next;
+    
+    public HashNode(K key, V value){
+      this.key=key;
+      this.value=value;
+    }
+    
+    @Override 
+    public String toString(){
+      return "{" + key + " " + value + "}";
+    }
+  }
   
-  ht.put(123, 432); 
-  ht.put(12, 2345);
-  ht.put(15, 5643); 
-  ht.put(3, 321);
-
-  ht.remove(12);
-
-  System.out.println(ht); 
-  } 
+  private HashNode<K, V>[] chainArray;
+  private int M = 11;
+  private int size;
+  
+  
 } 
