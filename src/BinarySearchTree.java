@@ -1,133 +1,177 @@
-public class BinarySearchTree {
-  void insert(int data) {
-   struct node *tempNode = (struct node*) malloc(sizeof(struct node));
-   struct node *current;
-   struct node *parent;
+public class BinaryTree {
+	
+    Node root;
 
-   tempNode->data = data;
-   tempNode->leftChild = NULL;
-   tempNode->rightChild = NULL;
+    public void addNode(int key, String name) {
 
-   if(root == NULL) {
-      root = tempNode;
-   } else {
-      current = root;
-      parent = NULL;
+        Node newNode = new Node(key, name);
 
-      while(1) {                
-         parent = current;
-			
-         if(data < parent->data) {
-            current = current->leftChild;
-				
-            if(current == NULL) {
-               parent->leftChild = tempNode;
-               return;
+        if (root == null) {
+
+            root = newNode;
+
+        } else {
+
+            Node focusNode = root;
+
+            Node parent;
+
+            while (true) {
+
+                parent = focusNode;
+
+                if (key < focusNode.key) {
+
+                    focusNode = focusNode.leftChild;
+
+                    if (focusNode == null) {
+
+                        parent.leftChild = newNode;
+
+                        return; 
+
+                    }
+
+                } else { 
+
+                    focusNode = focusNode.rightChild;
+
+                    if (focusNode == null) {
+
+                        parent.rightChild = newNode;
+
+                        return; 
+			    
+                    }
+
+                }
+
             }
-         } 
-         else {
-            current = current->rightChild;
 
-            if(current == NULL) {
-               parent->rightChild = tempNode;
-               return;
+        }
+
+    }
+
+    public void inOrderTraverseTree(Node focusNode) {
+
+        if (focusNode != null) {
+
+            inOrderTraverseTree(focusNode.leftChild);
+
+            System.out.println(focusNode);
+
+            inOrderTraverseTree(focusNode.rightChild);
+
+        }
+
+    }
+
+    public void preorderTraverseTree(Node focusNode) {
+
+        if (focusNode != null) {
+
+            System.out.println(focusNode);
+
+            preorderTraverseTree(focusNode.leftChild);
+
+            preorderTraverseTree(focusNode.rightChild);
+
+        }
+
+    }
+
+    public void postOrderTraverseTree(Node focusNode) {
+
+        if (focusNode != null) {
+
+            postOrderTraverseTree(focusNode.leftChild);
+
+            postOrderTraverseTree(focusNode.rightChild);
+
+            System.out.println(focusNode);
+
+        }
+
+    }
+
+    public Node findNode(int key) {
+
+        Node focusNode = root;
+
+        while (focusNode.key != key) {
+
+            if (key < focusNode.key) {
+
+                focusNode = focusNode.leftChild;
+
+            } else {
+
+                focusNode = focusNode.rightChild;
+
             }
-         }
-      }            
-   }
-}  
+
+ 
+
+            if (focusNode == null)
+
+                return null;
+
+        }
+
+        return focusNode;
+
+    }
+
+public static void main(String[] args) {
+
+        BinaryTree theTree = new BinaryTree();
+
+        theTree.addNode(50, "Boss");
+
+        theTree.addNode(25, "Vice President");
+
+        theTree.addNode(15, "Office Manager");
+
+        theTree.addNode(30, "Secretary");
+
+        theTree.addNode(75, "Sales Manager");
+
+        theTree.addNode(85, "Salesman 1");
+
+        System.out.println("\nNode with the key 75");
+
+        System.out.println(theTree.findNode(75));
+
 }
 
+}
 
-/class BinarySearchTree {
-  class Node {
+class Node {
+
     int key;
-    Node left, right;
 
-    public Node(int item) {
-      key = item;
-      left = right = null;
-    }
-  }
+    String name;
 
-  Node root;
+ 
 
-  BinarySearchTree() {
-    root = null;
-  }
+    Node leftChild;
 
-  void insert(int key) {
-    root = insertKey(root, key);
-  }
+    Node rightChild;
 
-  // Insert key in the tree
-  Node insertKey(Node root, int key) {
-    // Return a new node if the tree is empty
-    if (root == null) {
-      root = new Node(key);
-      return root;
+    Node(int key, String name) {
+
+        this.key = key;
+
+        this.name = name;
+
     }
 
-    // Traverse to the right place and insert the node
-    if (key < root.key)
-      root.left = insertKey(root.left, key);
-    else if (key > root.key)
-      root.right = insertKey(root.right, key);
+    public String toString() {
 
-    return root;
-  }
+        return name + " has the key " + key;
 
-  void inorder() {
-    inorderRec(root);
-  }
-
-  // Inorder Traversal
-  void inorderRec(Node root) {
-    if (root != null) {
-      inorderRec(root.left);
-      System.out.print(root.key + " -> ");
-      inorderRec(root.right);
-    }
-  }
-
-  void deleteKey(int key) {
-    root = deleteRec(root, key);
-  }
-
-  Node deleteRec(Node root, int key) {
-    // Return if the tree is empty
-    if (root == null)
-      return root;
-
-    // Find the node to be deleted
-    if (key < root.key)
-      root.left = deleteRec(root.left, key);
-    else if (key > root.key)
-      root.right = deleteRec(root.right, key);
-    else {
-      // If the node is with only one child or no child
-      if (root.left == null)
-        return root.right;
-      else if (root.right == null)
-        return root.left;
-
-      // If the node has two children
-      // Place the inorder successor in position of the node to be deleted
-      root.key = minValue(root.right);
-
-      // Delete the inorder successor
-      root.right = deleteRec(root.right, root.key);
     }
 
-    return root;
-  }
+ 
 
-  // Find the inorder successor
-  int minValue(Node root) {
-    int minv = root.key;
-    while (root.left != null) {
-      minv = root.left.key;
-      root = root.left;
-    }
-    return minv;
-  }/
+}
