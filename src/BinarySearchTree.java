@@ -1,177 +1,118 @@
-public class BinaryTree {
+package com.company;
+import java.util.*;
+
+public class BinarySearchTree<K extends Comparable<K>, V>
+{
+    private Node root;
+    private class Node
+    {
+        private K key;
+        private V val;
+        private Node left, right;
+        private int N;
+        public Node(K key, V val, int N) {
+            this.key = key;
+            this.val = val;
+            this.N = N;
+        }
+    }
+
+    public int size() {
+        return size(root);
+    }
 	
-    Node root;
+    private int size(Node x){
+        if(x == null)
+            return 0;
+        else
+            return x.N;
+    }
 
-    public void addNode(int key, String name) {
+    public void put(K key, V val) {
+        root = put(root, key, val);
+    }
+    private Node put(Node x, K key, V val) {
+        if(x == null){
+            return new Node(key, val, 1);
+        }
+        int a = key.compareTo(x.key);
+	    
+	if(a > 0){
+            x.right = put(x.right, key, val);
+        }
+        
+        else if(a < 0){
+            x.left = put(x.left, key, val);
+        }
+        else{
+            x.val = val;
+        }
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
 
-        Node newNode = new Node(key, name);
+    public V get(K key) {
+        return get(root, key);
+    }
+    private V get(Node x, K key) {
 
-        if (root == null) {
+        int cmp = key.compareTo(x.key);
+	if(cmp > 0){
+            return get(x.right, key);
+        }
+        
+        else if(cmp < 0){
+            return get(x.left, key);
+        }
+	    
+        else{
+            return x.val;
+        }
+    }
 
-            root = newNode;
+    public K min(){
+        return min(root).key;
+    }
 
-        } else {
-
-            Node focusNode = root;
-
-            Node parent;
-
-            while (true) {
-
-                parent = focusNode;
-
-                if (key < focusNode.key) {
-
-                    focusNode = focusNode.leftChild;
-
-                    if (focusNode == null) {
-
-                        parent.leftChild = newNode;
-
-                        return; 
-
-                    }
-
-                } else { 
-
-                    focusNode = focusNode.rightChild;
-
-                    if (focusNode == null) {
-
-                        parent.rightChild = newNode;
-
-                        return; 
-			    
-                    }
-
-                }
-
+    private Node min(Node x) {
+        if (x.left == null)
+            return x;
+        else
+            return min(x.left);
+    }
+    public void deleteMin() {
+        root = deleteMin(root);
+    }
+    private Node deleteMin(Node x) {
+        if (x.left == null){
+            return x.right;
+        }
+        x.left = deleteMin(x.left);
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+    public void delete(K key) {
+        root = delete(root, key);
+    }
+    private Node delete(Node x, K key) {
+        int cmp = key.compareTo(x.key);
+        if(cmp < 0)
+            x.left  = delete(x.left,  key);
+	else if (cmp > 0)
+            x.right = delete(x.right, key);
+        else{
+            if(x.right == null){
+                return x.left;
             }
-
-        }
-
-    }
-
-    public void inOrderTraverseTree(Node focusNode) {
-
-        if (focusNode != null) {
-
-            inOrderTraverseTree(focusNode.leftChild);
-
-            System.out.println(focusNode);
-
-            inOrderTraverseTree(focusNode.rightChild);
-
-        }
-
-    }
-
-    public void preorderTraverseTree(Node focusNode) {
-
-        if (focusNode != null) {
-
-            System.out.println(focusNode);
-
-            preorderTraverseTree(focusNode.leftChild);
-
-            preorderTraverseTree(focusNode.rightChild);
-
-        }
-
-    }
-
-    public void postOrderTraverseTree(Node focusNode) {
-
-        if (focusNode != null) {
-
-            postOrderTraverseTree(focusNode.leftChild);
-
-            postOrderTraverseTree(focusNode.rightChild);
-
-            System.out.println(focusNode);
-
-        }
-
-    }
-
-    public Node findNode(int key) {
-
-        Node focusNode = root;
-
-        while (focusNode.key != key) {
-
-            if (key < focusNode.key) {
-
-                focusNode = focusNode.leftChild;
-
-            } else {
-
-                focusNode = focusNode.rightChild;
-
+            if (x.left  == null){
+                return x.right;
             }
-
- 
-
-            if (focusNode == null)
-
-                return null;
-
+            Node t = x;
+            x = min(t.right);
+            x.right = deleteMin(t.right);
+            x.left = t.left;
         }
-
-        return focusNode;
-
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
     }
-
-public static void main(String[] args) {
-
-        BinaryTree theTree = new BinaryTree();
-
-        theTree.addNode(50, "Boss");
-
-        theTree.addNode(25, "Vice President");
-
-        theTree.addNode(15, "Office Manager");
-
-        theTree.addNode(30, "Secretary");
-
-        theTree.addNode(75, "Sales Manager");
-
-        theTree.addNode(85, "Salesman 1");
-
-        System.out.println("\nNode with the key 75");
-
-        System.out.println(theTree.findNode(75));
-
-}
-
-}
-
-class Node {
-
-    int key;
-
-    String name;
-
- 
-
-    Node leftChild;
-
-    Node rightChild;
-
-    Node(int key, String name) {
-
-        this.key = key;
-
-        this.name = name;
-
-    }
-
-    public String toString() {
-
-        return name + " has the key " + key;
-
-    }
-
- 
-
 }
